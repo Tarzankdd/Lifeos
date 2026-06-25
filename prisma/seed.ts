@@ -12,9 +12,31 @@ import {
   TaskStatus,
 } from "../src/generated/prisma/client";
 
+function normalizeSupabaseUrl(connectionString: string) {
+  try {
+    const url = new URL(connectionString);
+    if (url.hostname.includes("supabase.com") || url.hostname.includes("pooler.supabase.com")) {
+      url.searchParams.set("sslmode", "no-verify");
+    }
+    return url.toString();
+  } catch {
+    return connectionString;
+  }
+}
+
+const connectionString = normalizeSupabaseUrl(
+  process.env.DIRECT_URL ??
+    process.env.POSTGRES_URL_NON_POOLING ??
+    process.env.DATABASE_URL ??
+    process.env.POSTGRES_URL ??
+    "postgresql://lifeos:lifeos@localhost:5432/lifeos?schema=public",
+);
+
 const adapter = new PrismaPg({
-  connectionString:
-    process.env.DATABASE_URL ?? "postgresql://lifeos:lifeos@localhost:5432/lifeos?schema=public",
+  connectionString,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 const prisma = new PrismaClient({ adapter });
 
