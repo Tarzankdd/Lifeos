@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LifeOS
+
+LifeOS is a dark-mode-first personal productivity and financial management platform built with Next.js, TypeScript, TailwindCSS, Prisma, PostgreSQL, NextAuth, and Recharts.
+
+## Modules
+
+- Dashboard with today overview, stats, savings, habits, and analytics
+- Diary and journal entries with mood, tags, and search
+- Finance tracker for expenses, income, investments, transfers, reports, and CSV export
+- Savings goals with progress and monthly requirement calculations
+- Task manager with list controls and drag-and-drop Kanban board
+- Project management with linked tasks, milestones, and progress
+- Habit tracker with daily completion and consistency grid
+- Daily, weekly, monthly, quarterly, and yearly planner structure
+- Calendar view for tasks, events, goals, and reminders
+- Notes and knowledge base with folders, tags, and pinned notes
+- Notifications and settings
+
+## Tech Stack
+
+- Next.js App Router
+- TypeScript
+- TailwindCSS
+- Prisma ORM
+- PostgreSQL
+- NextAuth credentials auth
+- Recharts
+- dnd-kit
+- Zod
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
+cp .env.example .env
+npm run db:generate
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The UI runs immediately with local demo data stored in `localStorage`. Connect PostgreSQL to enable the API/auth/database path.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Database Setup
 
-## Learn More
+Set `DATABASE_URL` in `.env`, then run:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run db:migrate
+npm run db:seed
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Demo credentials after seeding:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```txt
+Email: demo@lifeos.local
+Password: lifeos-demo
+```
 
-## Deploy on Vercel
+## Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```txt
+src/app
+  api/auth/[...nextauth]
+  api/register
+  api/[resource]
+  login
+  register
+  page.tsx
+src/components
+  app
+  ui
+src/lib
+  auth.ts
+  lifeos-data.ts
+  prisma.ts
+  validations
+prisma
+  schema.prisma
+  migrations
+  seed.ts
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Production Notes
+
+- The Prisma schema is PostgreSQL-first and includes the full LifeOS domain model.
+- API routes are protected by NextAuth sessions.
+- The root app currently uses local demo persistence for instant usability.
+- The next production step is wiring each UI form to the protected API resources after a database is available.
