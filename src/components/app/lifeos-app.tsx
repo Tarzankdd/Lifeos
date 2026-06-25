@@ -56,8 +56,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   buildAnalytics,
+  emptyLifeOSState,
   quote,
-  seedLifeOSState,
   type CalendarEvent,
   type DiaryEntry,
   type Habit,
@@ -122,13 +122,13 @@ export function LifeOSApp() {
   const [query, setQuery] = useState("");
   const [now, setNow] = useState<Date | null>(null);
   const [state, setState] = useState<LifeOSState>(() => {
-    if (typeof window === "undefined") return seedLifeOSState;
+    if (typeof window === "undefined") return emptyLifeOSState;
     const stored = window.localStorage.getItem(storageKey);
-    if (!stored) return seedLifeOSState;
+    if (!stored) return emptyLifeOSState;
     try {
       return JSON.parse(stored) as LifeOSState;
     } catch {
-      return seedLifeOSState;
+      return emptyLifeOSState;
     }
   });
   const [taskDraft, setTaskDraft] = useState({
@@ -355,9 +355,9 @@ export function LifeOSApp() {
     URL.revokeObjectURL(url);
   }
 
-  function resetDemoData() {
-    setState(seedLifeOSState);
-    window.localStorage.removeItem(storageKey);
+  function clearLocalData() {
+    setState(emptyLifeOSState);
+    window.localStorage.setItem(storageKey, JSON.stringify(emptyLifeOSState));
   }
 
   return (
@@ -532,7 +532,7 @@ export function LifeOSApp() {
               <SettingsSection
                 state={state}
                 setState={setState}
-                resetDemoData={resetDemoData}
+                clearLocalData={clearLocalData}
                 exportFinanceCsv={exportFinanceCsv}
               />
             )}
@@ -1514,12 +1514,12 @@ function NotificationsSection({ notifications }: { notifications: LifeOSState["n
 function SettingsSection({
   state,
   setState,
-  resetDemoData,
+  clearLocalData,
   exportFinanceCsv,
 }: {
   state: LifeOSState;
   setState: React.Dispatch<React.SetStateAction<LifeOSState>>;
-  resetDemoData: () => void;
+  clearLocalData: () => void;
   exportFinanceCsv: () => void;
 }) {
   return (
@@ -1593,8 +1593,8 @@ function SettingsSection({
             <Archive className="h-4 w-4" />
             Print Backup
           </Button>
-          <Button variant="danger" onClick={resetDemoData}>
-            Reset Demo
+          <Button variant="danger" onClick={clearLocalData}>
+            Clear Data
           </Button>
         </CardContent>
       </Card>

@@ -133,6 +133,24 @@ const twoDaysAgo = "2026-06-23";
 export const quote =
   "A system is a promise you make to your future self, then keep with small actions.";
 
+export const emptyLifeOSState: LifeOSState = {
+  tasks: [],
+  projects: [],
+  transactions: [],
+  savingGoals: [],
+  diaryEntries: [],
+  habits: [],
+  planners: [],
+  events: [],
+  notes: [],
+  notifications: [],
+  settings: {
+    currency: "USD",
+    language: "English",
+    theme: "dark",
+  },
+};
+
 export const seedLifeOSState: LifeOSState = {
   tasks: [
     {
